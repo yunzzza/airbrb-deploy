@@ -72,7 +72,7 @@ export default function LoginPage() {
             cursor: 'pointer'
           }}
         >
-          login
+          login 
         </button>
       </form>
     </div>
