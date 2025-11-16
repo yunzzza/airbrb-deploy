@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import LoginPage from './pages/Auth/LoginPage';
+import RegisterPage from './pages/Auth/RegisterPage';
 import Navbar from './components/layout/Navbar';
 
 function App() {
@@ -14,7 +13,8 @@ function App() {
       <Routes>
         {/** login page */}
         <Route path="/login" element={<LoginPage/>} />
-
+        {/** register page */}
+        <Route path="/register" element={<RegisterPage />} />
         {/** main page */}
         <Route path="/" element={
           <>
