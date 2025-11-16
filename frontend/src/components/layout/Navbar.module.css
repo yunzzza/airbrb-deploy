@@ -36,11 +36,18 @@ color: #333;
 background-color: #ffffff;
 border: 1px solid #ddd;
 transition: background-color 0.2s;
+cursor: pointer;
 }
 
 .navButton:hover {
 background-color: #f2f2f2;
 }
+
+.userEmail {
+    font-size: 13px;
+    color: #555;
+    margin-right: 4px;
+  }
 
 @media (max-width: 480px) {
 .navContent {
@@ -55,5 +62,6 @@ background-color: #f2f2f2;
 .navButton {
     padding: 6px 10px;
     font-size: 13px;
+    cursor: pointer;
 }
 }
