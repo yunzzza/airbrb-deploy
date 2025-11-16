@@ -72,4 +72,62 @@ export default function HostedListingsPage() {
                     </div>
                     <div className={styles.meta}>
                       {meta.propertyType || 'Unknown type'} · {beds} beds · {bathrooms} baths
- 
+                    </div>
+                    <div className={styles.rating}>
+                      ⭐ {rating?.toFixed ? rating.toFixed(1) : rating} ({reviewCount} reviews)
+                    </div>
+                  </div>
+    
+                  <div className={styles.actions}>
+                    {listing.published ? (
+                      <button
+                        className={styles.actionButton}
+                        onClick={() => handleUnpublish(listing.id)}
+                      >
+                        Unpublish
+                      </button>
+                    ) : (
+                      <>
+                        <input
+                          type="date"
+                          className={styles.smallInput}
+                          value={draft.start || ''}
+                          onChange={(e) =>
+                            handleAvailabilityChange(listing.id, 'start', e.target.value)
+                          }
+                        />
+                        <input
+                          type="date"
+                          className={styles.smallInput}
+                          value={draft.end || ''}
+                          onChange={(e) =>
+                            handleAvailabilityChange(listing.id, 'end', e.target.value)
+                          }
+                        />
+                        <button
+                          className={styles.actionButton}
+                          onClick={() => handlePublish(listing.id)}
+                        >
+                          Publish
+                        </button>
+                      </>
+                    )}
+    
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => handleDelete(listing.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+    
+            {listings.length === 0 && <div>You have no hosted listings yet.</div>}
+          </div>
+        </div>
+      );
+    
+
+}
