@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import Navbar from './components/layout/Navbar';
+import HostedListingsPage from './pages/Host/HostedListingsPage';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -15,6 +16,8 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         {/** register page */}
         <Route path="/register" element={<RegisterPage />} />
+        {/** hostedlistings page */}
+        <Route path="/host/listings" element={<HostedListingsPage />} />
         {/** main page */}
         <Route path="/" element={
           <>
