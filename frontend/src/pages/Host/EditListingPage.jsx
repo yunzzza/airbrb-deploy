@@ -151,3 +151,149 @@ export default function EditListingPage() {
       <h1 className={styles.title}>Edit listing</h1>
 
       {error && <div className={styles.error}>{error}</div>}
+
+      {!error && (
+        <form onSubmit={handleSubmit}>
+          <div className={styles.field}>
+            <label className={styles.label}>Title</label>
+            <input
+              className={styles.input}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Address</label>
+            <input
+              className={styles.input}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.inlineRow}>
+            <div className={`${styles.field} ${styles.fieldHalf}`}>
+              <label className={styles.label}>Price per night ($)</label>
+              <input
+                className={styles.input}
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+            <div className={`${styles.field} ${styles.fieldHalf}`}>
+              <label className={styles.label}>Property type</label>
+              <input
+                className={styles.input}
+                value={propertyType}
+                onChange={(e) => setPropertyType(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className={styles.inlineRow}>
+            <div className={`${styles.field} ${styles.fieldHalf}`}>
+              <label className={styles.label}>Bathrooms</label>
+              <input
+                className={styles.input}
+                type="number"
+                value={bathrooms}
+                onChange={(e) => setBathrooms(e.target.value)}
+              />
+            </div>
+            <div className={`${styles.field} ${styles.fieldHalf}`}>
+              <label className={styles.label}>Total beds</label>
+              <input
+                className={styles.input}
+                type="number"
+                value={beds}
+                onChange={(e) => setBeds(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Thumbnail image</label>
+            <input
+              className={styles.input}
+              type="file"
+              accept="image/*"
+              onChange={handleThumbnailChange}
+            />
+            {thumbnailDataUrl && (
+              <div className={styles.thumbnailPreviewWrapper}>
+                <img
+                  src={thumbnailDataUrl}
+                  alt="Thumbnail preview"
+                  className={styles.thumbnailPreview}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>
+              Amenities (comma separated)
+            </label>
+            <textarea
+              className={styles.textarea}
+              value={amenities}
+              onChange={(e) => setAmenities(e.target.value)}
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>
+              Property images
+            </label>
+            <input
+              className={styles.input}
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleImagesChange}
+            />
+            {imageDataUrls.length > 0 && (
+              <div className={styles.imagesGrid}>
+                {imageDataUrls.map((src, idx) => (
+                  <div key={idx} className={styles.imageItem}>
+                    <img
+                      src={src}
+                      alt={`Image ${idx + 1}`}
+                      className={styles.imageThumb}
+                    />
+                    <button
+                      type="button"
+                      className={styles.imageRemoveBtn}
+                      onClick={() => handleRemoveImage(idx)}
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className={styles.buttonRow}>
+            <button
+              type="submit"
+              className={styles.button}
+              disabled={submitting}
+            >
+              {submitting ? 'Saving…' : 'Save'}
+            </button>
+            <button
+              type="button"
+              className={styles.buttonSecondary}
+              onClick={handleCancel}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+}
