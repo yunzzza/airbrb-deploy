@@ -34,6 +34,10 @@ export default function HostedListingsPage() {
     load();
     }, [auth, isLoggedIn, navigate]);
 
+    const goToCreate = () => {
+      navigate('/host/listings/new');
+    };
+
     if (loading) return <div className={styles.container}>Loading...</div>;
     if (error) return <div className={styles.container}>{error}</div>;
 
@@ -41,7 +45,7 @@ export default function HostedListingsPage() {
         <div className={styles.container}>
           <div className={styles.headerRow}>
             <div className={styles.title}>My Hosted Listings</div>
-            <button className={styles.createButton} >
+            <button className={styles.createButton} onClick={goToCreate}>
               + Create new listing
             </button>
           </div>
@@ -56,7 +60,7 @@ export default function HostedListingsPage() {
               const rating = listing.rating || meta.rating || 0;
               const reviewCount = listing.reviews?.length || meta.numReviews || 0;
     
-              const draft = availabilityDraft[listing.id] || {};
+              // const draft = availabilityDraft[listing.id] || {};
     
               return (
                 <div key={listing.id} className={styles.card}>
@@ -88,22 +92,22 @@ export default function HostedListingsPage() {
                       </button>
                     ) : (
                       <>
-                        <input
+                        {/* <input
                           type="date"
                           className={styles.smallInput}
                           value={draft.start || ''}
                           onChange={(e) =>
                             handleAvailabilityChange(listing.id, 'start', e.target.value)
                           }
-                        />
-                        <input
+                        /> */}
+                        {/* <input
                           type="date"
                           className={styles.smallInput}
                           value={draft.end || ''}
                           onChange={(e) =>
                             handleAvailabilityChange(listing.id, 'end', e.target.value)
                           }
-                        />
+                        /> */}
                         <button
                           className={styles.actionButton}
                           onClick={() => handlePublish(listing.id)}
