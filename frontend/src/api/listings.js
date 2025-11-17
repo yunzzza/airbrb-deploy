@@ -64,3 +64,54 @@ export async function fetchListingById(token, id) {
   }
   return data; 
 }
+
+// delete listing
+export async function deleteListing(token, id) {
+  const res = await fetch(`${BASE_URL}/listings/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to delete listing');
+  }
+  return data;
+}
+
+
+// publish a particular listing
+export async function publishListing(token, id, availability) {
+  const res = await fetch(`${BASE_URL}/listings/publish/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ availability }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to publish listing');
+  }
+  return data;
+}
+
+
+// unpublish a particular listing
+export async function unpublishListing(token, id) {
+  const res = await fetch(`${BASE_URL}/listings/unpublish/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to unpublish listing');
+  }
+  return data;
+}
