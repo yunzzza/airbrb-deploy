@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HostedListingsPage.module.css';
 import { useAuth } from '../../context/AuthContext';
-import { fetchAllListings } from '../../api/listings';
+import { fetchAllListings, fetchListingById } from '../../api/listings';
 
 export default function HostedListingsPage() {
     const { auth, isLoggedIn } = useAuth();
@@ -17,29 +17,41 @@ export default function HostedListingsPage() {
           return;
         }
     
-    const load = async () => {
-        setLoading(true);
-        setError('');
-        try {
-        const data = await fetchAllListings(auth.token);
-        const all = data.listings || data; 
-        const mine = all.filter(l => l.owner === auth.email);
-        setListings(mine);
-        } catch (err) {
-        setError(err.message || 'Failed to load listings');
-        } finally {
-        setLoading(false);
-        }
-    };
-    load();
+      const load = async () => {
+          setLoading(true);
+          setError('');
+          try {
+          const data = await fetchAllListings(auth.token);
+          const all = data.listings || data; 
+          const mine = all.filter(l => l.owner === auth.email);
+          const fullMine = await Promise.all(
+            mine.map(async (s) => {
+              const detail = await fetchListingById(auth.token, s.id);
+              const listing = detail.listing || detail;
+              return { ...listing, id: s.id,};
+            })
+          );
+          setListings(fullMine);
+          } catch (err) {
+          setError(err.message || 'Failed to load listings');
+          } finally {
+          setLoading(false);
+          }
+      };
+      load();
     }, [auth, isLoggedIn, navigate]);
 
     const goToCreate = () => {
       navigate('/host/listings/new');
     };
 
+    const goToEdit = (id) => {
+      navigate(`/host/listings/${id}/edit`);
+    };
+
     if (loading) return <div className={styles.container}>Loading...</div>;
     if (error) return <div className={styles.container}>{error}</div>;
+
 
     return (
         <div className={styles.container}>
@@ -69,10 +81,9 @@ export default function HostedListingsPage() {
                     alt={listing.title}
                     className={styles.thumb}
                   />
-                  <div className={styles.info} onClick={() => goToEdit(listing.id)}>
+                  <div className={styles.info} >
                     <div className={styles.titleRow}>
                       <span>{listing.title}</span>
-                      <span>${price}/night</span>
                     </div>
                     <div className={styles.meta}>
                       {meta.propertyType || 'Unknown type'} · {beds} beds · {bathrooms} baths
@@ -80,6 +91,7 @@ export default function HostedListingsPage() {
                     <div className={styles.rating}>
                       ⭐ {rating?.toFixed ? rating.toFixed(1) : rating} ({reviewCount} reviews)
                     </div>
+                    <span>${price}/night</span>
                   </div>
     
                   <div className={styles.actions}>
@@ -123,6 +135,12 @@ export default function HostedListingsPage() {
                     >
                       Delete
                     </button>
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => goToEdit(listing.id)}
+                    >
+                      Edit
+                    </button>
                   </div>
                 </div>
               );
@@ -133,5 +151,4 @@ export default function HostedListingsPage() {
         </div>
       );
     
-
 }
