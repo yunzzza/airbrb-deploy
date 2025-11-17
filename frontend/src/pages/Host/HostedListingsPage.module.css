@@ -96,3 +96,58 @@ border-radius: 6px;
 border: 1px solid #ccc;
 font-size: 12px;
 }
+
+
+.availabilityBlock {
+display: flex;
+flex-direction: column;
+gap: 4px;
+margin-bottom: 4px;
+}
+
+.rangeRow {
+display: flex;
+align-items: center;
+gap: 4px;
+}
+
+.rangeSeparator {
+font-size: 12px;
+opacity: 0.7;
+}
+
+.rangeDeleteButton,
+.addRangeButton {
+font-size: 12px;
+padding: 2px 6px;
+}
+
+
+.errorCard {
+max-width: 320px;
+background-color: #ffe0e0;
+color: #900;
+border-radius: 8px;
+padding: 10px 12px;
+display: flex;
+align-items: flex-start;
+gap: 8px;
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+z-index: 999;
+font-size: 14px;
+}
+
+.errorMessage {
+flex: 1;
+line-height: 1.4;
+}
+
+.errorClose {
+border: none;
+background: transparent;
+color: inherit;
+cursor: pointer;
+font-size: 16px;
+padding: 0 4px;
+}
+  
