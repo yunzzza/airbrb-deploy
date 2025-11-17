@@ -4,6 +4,7 @@ import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import Navbar from './components/layout/Navbar';
 import HostedListingsPage from './pages/Host/HostedListingsPage';
+import CreateListingPage from './pages/Host/CreateListingPage';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,6 +19,8 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         {/** hostedlistings page */}
         <Route path="/host/listings" element={<HostedListingsPage />} />
+        {/** create Listing page */}
+        <Route path="/host/listings/new" element={<CreateListingPage />} />
         {/** main page */}
         <Route path="/" element={
           <>
