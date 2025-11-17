@@ -146,3 +146,169 @@ export default function HostedListingsPage() {
       const val = Number(r.rating);
       return acc + (Number.isFinite(val) ? val : 0);
     }, 0);
+
+    return sum / reviews.length;
+  }
+
+  const goToCreate = () => {
+    navigate('/host/listings/new');
+  };
+
+  const goToEdit = (id) => {
+    navigate(`/host/listings/${id}/edit`);
+  };
+
+  if (loading) {
+    return <div className={styles.container}>Loading...</div>;
+  }
+
+  return (
+    <div className={styles.container}>
+      {/* show error */}
+      {error && (
+        <div className={styles.errorCard}>
+          <span className={styles.errorMessage}>{error}</span>
+          <button
+            type="button"
+            className={styles.errorClose}
+            onClick={() => setError('')}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      <div className={styles.headerRow}>
+        <div className={styles.title}>My Hosted Listings</div>
+        <button className={styles.createButton} onClick={goToCreate}>
+          + Create new listing
+        </button>
+      </div>
+
+      <div className={styles.list}>
+        {listings.map((listing) => {
+          const meta = listing.metadata || {};
+          const beds = meta.numBeds ?? 0;
+          const bathrooms = meta.numBathrooms ?? 0;
+          const price = listing.price ?? 0;
+          const thumbnail = listing.thumbnail || '';
+          const reviewCount = listing.reviews?.length ?? 0;
+          const rating = getAverageRating(listing);
+          const ranges = availabilityDraft[listing.id] || [];
+
+          return (
+            <div key={listing.id} className={styles.card}>
+              <img
+                src={thumbnail}
+                alt={listing.title}
+                className={styles.thumb}
+              />
+              <div className={styles.info}>
+                <div className={styles.titleRow}>
+                  <span>{listing.title}</span>
+                </div>
+                <div className={styles.meta}>
+                  {meta.propertyType || 'Unknown type'} · {beds} beds ·{' '}
+                  {bathrooms} baths
+                </div>
+                <div className={styles.rating}>
+                  ⭐ {rating?.toFixed ? rating.toFixed(1) : rating} (
+                  {reviewCount} reviews)
+                </div>
+                <span>${price}/night</span>
+              </div>
+
+              <div className={styles.actions}>
+                {listing.published ? (
+                  <button
+                    className={styles.actionButton}
+                    onClick={() => handleUnpublish(listing.id)}
+                  >
+                    Unpublish
+                  </button>
+                ) : (
+                  <>
+                    <div className={styles.availabilityBlock}>
+                      {ranges.map((rng, idx) => (
+                        <div key={idx} className={styles.rangeRow}>
+                          <input
+                            type="date"
+                            className={styles.smallInput}
+                            value={rng.start || ''}
+                            onChange={(e) =>
+                              handleAvailabilityChange(
+                                listing.id,
+                                idx,
+                                'start',
+                                e.target.value
+                              )
+                            }
+                          />
+                          <span className={styles.rangeSeparator}>→</span>
+                          <input
+                            type="date"
+                            className={styles.smallInput}
+                            value={rng.end || ''}
+                            onChange={(e) =>
+                              handleAvailabilityChange(
+                                listing.id,
+                                idx,
+                                'end',
+                                e.target.value
+                              )
+                            }
+                          />
+                          <button
+                            type="button"
+                            className={styles.rangeDeleteButton}
+                            onClick={() =>
+                              removeAvailabilityRange(listing.id, idx)
+                            }
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+
+                      <button
+                        type="button"
+                        className={styles.addRangeButton}
+                        onClick={() => addAvailabilityRange(listing.id)}
+                      >
+                        + Add availability range
+                      </button>
+                    </div>
+
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => handlePublish(listing.id)}
+                    >
+                      Publish
+                    </button>
+                  </>
+                )}
+
+                <button
+                  className={styles.actionButton}
+                  onClick={() => handleDelete(listing.id)}
+                >
+                  Delete
+                </button>
+                <button
+                  className={styles.actionButton}
+                  onClick={() => goToEdit(listing.id)}
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
+          );
+        })}
+
+        {listings.length === 0 && (
+          <div>You have no hosted listings yet.</div>
+        )}
+      </div>
+    </div>
+  );
+}
