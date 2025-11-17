@@ -183,3 +183,87 @@ export default function CreateListingPage() {
             />
           </div>
         </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>Thumbnail image (optional)</label>
+          <input
+            className={styles.input}
+            type="file"
+            accept="image/*"
+            onChange={handleThumbnailChange}
+          />
+          {thumbnailDataUrl && (
+            <div className={styles.thumbnailPreviewWrapper}>
+              <img
+                src={thumbnailDataUrl}
+                alt="Thumbnail preview"
+                className={styles.thumbnailPreview}
+              />
+            </div>
+          )}
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>
+            Amenities (comma separated)
+          </label>
+          <textarea
+            className={styles.textarea}
+            value={amenities}
+            onChange={(e) => setAmenities(e.target.value)}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <label className={styles.label}>
+            Property images (optional)
+          </label>
+          <input
+            className={styles.input}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImagesChange}
+          />
+          {imageDataUrls.length > 0 && (
+            <div className={styles.imagesGrid}>
+              {imageDataUrls.map((src, idx) => (
+                <div key={idx} className={styles.imageItem}>
+                  <img
+                    src={src}
+                    alt={`Image ${idx + 1}`}
+                    className={styles.imageThumb}
+                  />
+                  <button
+                    type="button"
+                    className={styles.imageRemoveBtn}
+                    onClick={() => handleRemoveImage(idx)}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className={styles.buttonRow}>
+          <button
+            type="submit"
+            className={styles.button}
+            disabled={submitting}
+          >
+            {submitting ? 'Creating…' : 'Create'}
+          </button>
+          <button
+            type="button"
+            className={styles.buttonSecondary}
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
