@@ -13,4 +13,22 @@ export async function fetchAllListings(token) {
       throw new Error(data.error || 'Failed to fetch listings');
     }
     return data; 
-  }
+}
+
+
+// create a new listing
+export async function createListing(token, payload) {
+    const res = await fetch(`${BASE_URL}/listings/new`, {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+        throw new Error(data.error || 'Failed to create listing');
+    }
+    return data;
+}
