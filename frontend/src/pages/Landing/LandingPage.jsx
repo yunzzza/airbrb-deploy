@@ -182,3 +182,182 @@ export default function LandingPage() {
         return words.some((w) => hay.includes(w));
       });
     }
+
+    // filter search
+    if (filter === 'bedrooms') {
+      const min = bedsMin ? Number(bedsMin) : null;
+      const max = bedsMax ? Number(bedsMax) : null;
+
+      list = list.filter((l) => {
+        const meta = l.metadata || {};
+        const beds = Number(meta.numBeds ?? 0);
+
+        if (min !== null && beds < min) return false;
+        if (max !== null && beds > max) return false;
+        return true;
+      });
+    }
+
+    if (filter === 'price') {
+      const min = priceMin ? Number(priceMin) : null;
+      const max = priceMax ? Number(priceMax) : null;
+
+      list = list.filter((l) => {
+        const price = Number(l.price ?? 0);
+        if (min !== null && price < min) return false;
+        if (max !== null && price > max) return false;
+        return true;
+      });
+    }
+
+    if (filter === 'date') {
+      list = list.filter((l) => isAvailableForRange(l, sDate, eDate));
+    }
+
+    // bookings show firstly, then follow normal order to show remaining listings
+    list.sort((a, b) => {
+      const aBooked = bookedIds.has(a.id);
+      const bBooked = bookedIds.has(b.id);
+
+      // booking 
+      if (isLoggedIn && aBooked !== bBooked) {
+        return aBooked ? -1 : 1;
+      }
+
+      // remaining
+      if (filter === 'bedrooms') {
+        const aBeds = Number(a.metadata?.numBeds ?? 0);
+        const bBeds = Number(b.metadata?.numBeds ?? 0);
+        if (aBeds !== bBeds) {
+          return sortOrder === 'asc' ? aBeds - bBeds : bBeds - aBeds;
+        }
+      } else if (filter === 'price') {
+        const aPrice = Number(a.price ?? 0);
+        const bPrice = Number(b.price ?? 0);
+        if (aPrice !== bPrice) {
+          return sortOrder === 'asc' ? aPrice - bPrice : bPrice - aPrice;
+        }
+      } else if (filter === 'date') {
+        // which is more early to be avaiable shows firstly
+        const aFirst = (a.availability?.[0]?.start) || '';
+        const bFirst = (b.availability?.[0]?.start) || '';
+        if (aFirst && bFirst && aFirst !== bFirst) {
+          return sortOrder === 'asc'
+            ? aFirst.localeCompare(bFirst)
+            : bFirst.localeCompare(aFirst);
+        }
+      } else if (filter === 'rating') {
+        const aRating = getAverageRating(a);
+        const bRating = getAverageRating(b);
+        if (aRating !== bRating) {
+          return sortOrder === 'asc'
+            ? aRating - bRating
+            : bRating - aRating;
+        }
+      }
+
+      // follow title to order
+      const aTitle = (a.title || '').toLowerCase();
+      const bTitle = (b.title || '').toLowerCase();
+      return aTitle.localeCompare(bTitle);
+    });
+
+    setDisplayedListings(list);
+  }
+
+  const handleSearchClick = () => {
+    applySearch();
+  };
+
+  const handleClear = () => {
+    setSearchText('');
+    setActiveFilter('none');
+    setMinBeds('');
+    setMaxBeds('');
+    setMinPrice('');
+    setMaxPrice('');
+    setStartDate('');
+    setEndDate('');
+    setOrder('asc');
+    // clear all search content and reuse order rules
+    applySearch(allListings, bookedListingIds, {
+      searchText: '',
+      activeFilter: 'none',
+      order: 'asc',
+      minBeds: '',
+      maxBeds: '',
+      minPrice: '',
+      maxPrice: '',
+      startDate: '',
+      endDate: '',
+    });
+  };
+
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div>Loading listings...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.heading}>Explore AirBrB</h1>
+
+      {error && <div className={styles.errorMessage}>{error}</div>}
+
+      {/* search panel */}
+      <div className={styles.searchPanel}>
+        <div className={styles.searchRow}>
+          <input
+            className={styles.searchInput}
+            placeholder="Search by title or city..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+
+          <select
+            className={styles.filterSelect}
+            value={activeFilter}
+            onChange={(e) => setActiveFilter(e.target.value)}
+          >
+            <option value="none">No extra filter</option>
+            <option value="bedrooms">Beds range</option>
+            <option value="date">Date range</option>
+            <option value="price">Price range</option>
+            <option value="rating">Review rating</option>
+          </select>
+
+          {activeFilter !== 'none' && (
+            <select
+              className={styles.orderSelect}
+              value={order}
+              onChange={(e) => setOrder(e.target.value)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
+          )}
+        </div>
+
+        {/* different filter */}
+        {activeFilter === 'bedrooms' && (
+          <div className={styles.searchRow}>
+            <input
+              className={styles.numericInput}
+              type="number"
+              placeholder="Min beds"
+              value={minBeds}
+              onChange={(e) => setMinBeds(e.target.value)}
+            />
+            <input
+              className={styles.numericInput}
+              type="number"
+              placeholder="Max beds"
+              value={maxBeds}
+              onChange={(e) => setMaxBeds(e.target.value)}
+            />
+          </div>
+        )}
