@@ -28,14 +28,14 @@ export default function HostedListingsPage() {
       setLoading(true);
       setError('');
       try {
-        const data = await fetchAllListings(auth.token);
+        const data = await fetchAllListings();
         const all = data.listings;
         const mine = all.filter((l) => l.owner === auth.email);
 
         const fullMine = await Promise.all(
           mine.map(async (s) => {
             const detail = await fetchListingById(auth.token, s.id);
-            const listing = detail.listing || detail;
+            const listing = detail.listing;
             return { ...listing, id: s.id };
           })
         );
@@ -187,12 +187,12 @@ export default function HostedListingsPage() {
 
       <div className={styles.list}>
         {listings.map((listing) => {
-          const meta = listing.metadata || {};
-          const beds = meta.numBeds ?? 0;
-          const bathrooms = meta.numBathrooms ?? 0;
-          const price = listing.price ?? 0;
-          const thumbnail = listing.thumbnail || '';
-          const reviewCount = listing.reviews?.length ?? 0;
+          const meta = listing.metadata;
+          const beds = meta.numBeds;
+          const bathrooms = meta.numBathrooms;
+          const price = listing.price;
+          const thumbnail = listing.thumbnail;
+          const reviewCount = listing.reviews.length;
           const rating = getAverageRating(listing);
           const ranges = availabilityDraft[listing.id] || [];
 
