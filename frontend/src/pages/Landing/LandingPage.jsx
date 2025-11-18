@@ -361,3 +361,149 @@ export default function LandingPage() {
             />
           </div>
         )}
+
+        {activeFilter === 'price' && (
+          <div className={styles.searchRow}>
+            <input
+              className={styles.numericInput}
+              type="number"
+              placeholder="Min price"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+            />
+            <input
+              className={styles.numericInput}
+              type="number"
+              placeholder="Max price"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+            />
+          </div>
+        )}
+
+        {activeFilter === 'date' && (
+          <div className={styles.searchRow}>
+            <input
+              className={styles.dateInput}
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+            <input
+              className={styles.dateInput}
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </div>
+        )}
+
+        {activeFilter === 'rating' && (
+          <div className={styles.searchRow}>
+            <span style={{ fontSize: 13 }}>
+              Results will be sorted by average rating
+            </span>
+          </div>
+        )}
+
+        <div className={styles.buttonRow}>
+          <button
+            type="button"
+            className={styles.searchButton}
+            onClick={handleSearchClick}
+          >
+            Search
+          </button>
+          <button
+            type="button"
+            className={styles.clearButton}
+            onClick={handleClear}
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+
+      {/* show listings */}
+      <div className={styles.list}>
+        {displayedListings.map((listing) => {
+          const meta = listing.metadata || {};
+          const price = listing.price ?? 0;
+          const beds = meta.numBeds ?? 0;
+          const bathrooms = meta.numBathrooms ?? 0;
+          const thumbnail = listing.thumbnail || '';
+          const reviews = listing.reviews || [];
+          const reviewCount = reviews.length;
+          const avgRating = getAverageRating(listing);
+          const isBooked = bookedListingIds.has(listing.id);
+
+          return (
+            <div
+              key={listing.id}
+              className={styles.card}
+              //  remain 2.4 navigate(`/listings/${listing.id}`)
+              onClick={() => {
+                // 2.4
+                console.log('Clicked listing', listing.id);
+              }}
+            >
+              <img
+                src={thumbnail}
+                alt={listing.title}
+                className={styles.thumb}
+              />
+
+              <div className={styles.cardInfo}>
+                <div className={styles.titleRow}>
+                  <span className={styles.cardTitle}>
+                    {listing.title || 'Untitled'}
+                  </span>
+                  <span className={styles.cardPrice}>${price}/night</span>
+                </div>
+
+                <div className={styles.cardMeta}>
+                  {meta.propertyType || 'Unknown type'} · {beds} beds ·{' '}
+                  {bathrooms} baths
+                </div>
+
+                <div className={styles.cardRating}>
+                  ⭐{' '}
+                  {avgRating && avgRating.toFixed
+                    ? avgRating.toFixed(1)
+                    : avgRating}{' '}
+                  ({reviewCount} reviews)
+                </div>
+
+                <div className={styles.tagRow}>
+                  {isBooked && (
+                    <span
+                      className={`${styles.tag} ${styles.badgeBooked}`}
+                    >
+                      You booked this
+                    </span>
+                  )}
+                  {meta.amenities?.slice(0, 3).map((a) => (
+                    <span key={a} className={styles.tag}>
+                      {a}
+                    </span>
+                  ))}
+                  {meta.amenities && meta.amenities.length > 3 && (
+                    <span className={styles.tag}>
+                      +{meta.amenities.length - 3} more
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        {displayedListings.length === 0 && (
+          <div className={styles.emptyMessage}>
+            No listings match your search.
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
