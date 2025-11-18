@@ -2,7 +2,7 @@ import backendConfig from '../../backend.config.json';
 const BASE_URL = `http://localhost:${backendConfig.BACKEND_PORT}`; 
 
 // fetch all listings
-export async function fetchAllListings(token) {
+export async function fetchAllListings() {
     const res = await fetch(`${BASE_URL}/listings`, {
       headers: {
         'Content-Type': 'application/json',
