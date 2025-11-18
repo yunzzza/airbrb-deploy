@@ -6,6 +6,7 @@ import Navbar from './components/layout/Navbar';
 import HostedListingsPage from './pages/Host/HostedListingsPage';
 import CreateListingPage from './pages/Host/CreateListingPage';
 import EditListingPage from './pages/Host/EditListingPage';
+import LandingPage from './pages/Landing/LandingPage';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -25,11 +26,7 @@ function App() {
         {/** edit listing page */}
         <Route path="/host/listings/:id/edit" element={<EditListingPage />} />
         {/** main page */}
-        <Route path="/" element={
-          <>
-          
-          </>
-        } />
+        <Route path="/" element={<LandingPage />} />
       </Routes>
     </BrowserRouter>
   )
