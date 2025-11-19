@@ -7,6 +7,7 @@ import HostedListingsPage from './pages/Host/HostedListingsPage';
 import CreateListingPage from './pages/Host/CreateListingPage';
 import EditListingPage from './pages/Host/EditListingPage';
 import LandingPage from './pages/Landing/LandingPage';
+import ListingDetailsPage from './pages/Listing/ListingDetailsPage';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -25,6 +26,8 @@ function App() {
         <Route path="/host/listings/new" element={<CreateListingPage />} />
         {/** edit listing page */}
         <Route path="/host/listings/:id/edit" element={<EditListingPage />} />
+        {/** check listing page */}
+        <Route path="/listings/:id" element={<ListingDetailsPage />} />
         {/** main page */}
         <Route path="/" element={<LandingPage />} />
       </Routes>
