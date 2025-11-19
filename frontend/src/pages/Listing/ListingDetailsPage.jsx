@@ -196,3 +196,194 @@ export default function ListingDetailsPage() {
   if (error) {
     return <div className={styles.container}>Error: {error}</div>;
   }
+
+  if (!listing) {
+    return <div className={styles.container}>Listing not found.</div>;
+  }
+
+  const meta = listing.metadata || {};
+  const images = meta.images || [];
+  const allImages = [listing.thumbnail, ...images].filter(Boolean);
+  const reviews = listing.reviews || [];
+  const avgRating =
+    reviews.length > 0
+      ? reviews.reduce((acc, r) => acc + Number(r.rating || 0), 0) / reviews.length
+      : 0;
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.title}>{listing.title}</h1>
+        <div className={styles.subInfo}>
+          <span className={styles.address}>{listing.address}</span>
+          <span className={styles.dot}>•</span>
+          <span>
+            ⭐ {avgRating.toFixed(1)} ({reviews.length} reviews)
+          </span>
+        </div>
+      </div>
+
+      {allImages.length > 0 && (
+        <div className={styles.gallery}>
+          {allImages.map((src, idx) => (
+            <img
+              key={idx}
+              src={src}
+              alt={`Property image ${idx + 1}`}
+              className={idx === 0 ? styles.mainImage : styles.thumbImage}
+            />
+          ))}
+        </div>
+      )}
+
+      <div className={styles.contentRow}>
+        <div className={styles.leftColumn}>
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Property details</h2>
+            <div className={styles.chipsRow}>
+              <span className={styles.chip}>{meta.propertyType || 'Unknown type'}</span>
+              <span className={styles.chip}>
+                {meta.numBeds ?? 0} beds · {meta.numBathrooms ?? 0} baths
+              </span>
+            </div>
+            <p className={styles.text}>
+              <strong>Price</strong>{' '}
+              {stayPriceInfo ? (
+                <>
+                  ${stayPriceInfo.total} per stay ({stayPriceInfo.nights} nights) ·{' '}
+                  <span className={styles.smallText}>
+                    ${listing.price}/night
+                  </span>
+                </>
+              ) : (
+                <>${listing.price}/night</>
+              )}
+            </p>
+            {meta.amenities?.length > 0 && (
+              <>
+                <h3 className={styles.subSectionTitle}>Amenities</h3>
+                <ul className={styles.amenitiesList}>
+                  {meta.amenities.map((a, idx) => (
+                    <li key={idx}>{a}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+
+          <div className={styles.section}>
+            <h2 className={styles.sectionTitle}>Reviews</h2>
+            {reviews.length === 0 && (
+              <p className={styles.text}>No reviews yet.</p>
+            )}
+            {reviews.map((r, idx) => (
+              <div key={idx} className={styles.reviewCard}>
+                <div className={styles.reviewHeader}>
+                  <span className={styles.reviewRating}>⭐ {r.rating}</span>
+                  {r.user && <span className={styles.reviewUser}>{r.user}</span>}
+                </div>
+                <p className={styles.reviewComment}>{r.comment}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className={styles.rightColumn}>
+          <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Book this listing</h2>
+            {!isLoggedIn && (
+              <p className={styles.textSmall}>
+                You need to{' '}
+                <button
+                  type="button"
+                  className={styles.linkButton}
+                  onClick={() => navigate('/login')}
+                >
+                  log in
+                </button>{' '}
+                to make a booking.
+              </p>
+            )}
+            <form onSubmit={handleBookingSubmit} className={styles.form}>
+              <label className={styles.label}>
+                Check-in
+                <input
+                  type="date"
+                  className={styles.input}
+                  value={bookStart}
+                  onChange={(e) => setBookStart(e.target.value)}
+                />
+              </label>
+              <label className={styles.label}>
+                Check-out
+                <input
+                  type="date"
+                  className={styles.input}
+                  value={bookEnd}
+                  onChange={(e) => setBookEnd(e.target.value)}
+                />
+              </label>
+
+              {bookingError && (
+                <div className={styles.errorBox}>{bookingError}</div>
+              )}
+              {bookingMessage && (
+                <div className={styles.successBox}>{bookingMessage}</div>
+              )}
+
+              <button
+                type="submit"
+                className={styles.primaryButton}
+                disabled={bookingSubmitting}
+              >
+                {bookingSubmitting ? 'Submitting…' : 'Request booking'}
+              </button>
+            </form>
+          </div>
+
+          <div className={styles.card}>
+            <h2 className={styles.cardTitle}>My bookings</h2>
+            {loadingBookings && (
+              <p className={styles.textSmall}>Loading bookings…</p>
+            )}
+            {!loadingBookings && myBookingsForThisListing.length === 0 && (
+              <p className={styles.textSmall}>
+                You have no bookings for this listing yet.
+              </p>
+            )}
+            {!loadingBookings &&
+              myBookingsForThisListing.map((b) => (
+                <div key={b.id} className={styles.bookingItem}>
+                  <div className={styles.bookingDates}>
+                    {b.dateRange?.start} → {b.dateRange?.end}
+                  </div>
+                  <div className={styles.bookingStatus}>
+                    Status: <strong>{b.status}</strong>
+                  </div>
+                </div>
+              ))}
+          </div>
+
+
+          {acceptedBookingForReview && (
+            <div className={styles.card}>
+              <h2 className={styles.cardTitle}>Leave a review</h2>
+              <form onSubmit={handleReviewSubmit} className={styles.form}>
+                <label className={styles.label}>
+                  Rating (0–5)
+                  <input
+                    type="number"
+                    min="0"
+                    max="5"
+                    step="0.5"
+                    className={styles.input}
+                    value={rating}
+                    onChange={(e) => setRating(e.target.value)}
+                  />
+                </label>
+                <label className={styles.label}>
+                  Comment
+                  <textarea
+                    className={styles.textarea}
+                    value={comment}
+    
