@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import { useAuth } from '../../context/AuthContext';
 import { fetchAllListings, fetchListingById } from '../../api/listings';
@@ -60,6 +61,8 @@ export default function LandingPage() {
 
   // for order set
   const [order, setOrder] = useState('asc'); 
+
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -269,6 +272,21 @@ export default function LandingPage() {
     applySearch();
   };
 
+  const handleOpenListing = (listing) => {
+    // only applied date range search, send date range
+    const hasDateRange =
+      activeFilter === 'date' && startDate && endDate;
+  
+    const searchRange = hasDateRange
+      ? { start: startDate, end: endDate }
+      : null;
+  
+    navigate(`/listings/${listing.id}`, {
+      state: { searchRange },
+    });
+  };
+  
+
   const handleClear = () => {
     setSearchText('');
     setActiveFilter('none');
@@ -441,11 +459,8 @@ export default function LandingPage() {
             <div
               key={listing.id}
               className={styles.card}
-              //  remain 2.4 navigate(`/listings/${listing.id}`)
-              onClick={() => {
-                // 2.4
-                console.log('Clicked listing', listing.id);
-              }}
+              //  navigate to (`/listings/${listing.id}`)
+              onClick={() => handleOpenListing(listing)}
             >
               <img
                 src={thumbnail}

@@ -1,0 +1,141 @@
+.container {
+max-width: 1100px;
+margin: 0 auto;
+padding: 16px;
+}
+.header {
+margin-bottom: 12px;
+}
+.title {
+font-size: 1.6rem;
+margin: 0 0 4px 0;
+}
+.subInfo {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+font-size: 0.9rem;
+color: #555;
+}
+.address {
+font-weight: 500;
+}
+.dot {
+opacity: 0.6;
+}
+.gallery {
+display: grid;
+grid-template-columns: 2fr 1fr;
+gap: 8px;
+margin: 12px 0 20px;
+}
+.mainImage {
+width: 100%;
+height: 220px;
+object-fit: cover;
+border-radius: 12px;
+}
+.thumbImage {
+width: 100%;
+height: 106px;
+object-fit: cover;
+border-radius: 8px;
+}
+.contentRow {
+display: flex;
+flex-direction: column;
+gap: 16px;
+}
+@media (min-width: 768px) {
+.contentRow {
+    flex-direction: row;
+    align-items: flex-start;
+}
+}
+.leftColumn {
+flex: 2;
+min-width: 0;
+}
+.rightColumn {
+flex: 1;
+min-width: 0;
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+.section {
+margin-bottom: 16px;
+padding: 12px 0;
+border-bottom: 1px solid #eee;
+}
+.sectionTitle {
+font-size: 1.1rem;
+margin: 0 0 8px 0;
+}
+.subSectionTitle {
+margin: 12px 0 4px;
+font-size: 0.95rem;
+}
+.text {
+font-size: 0.95rem;
+margin: 4px 0;
+}
+.textSmall {
+font-size: 0.85rem;
+color: #555;
+margin: 4px 0;
+}
+.smallText {
+font-size: 0.85rem;
+color: #666;
+}
+.chipsRow {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+margin-bottom: 6px;
+}
+.chip {
+padding: 4px 8px;
+border-radius: 12px;
+background-color: #f3f4f6;
+font-size: 0.8rem;
+}
+.amenitiesList {
+padding-left: 18px;
+margin: 4px 0;
+font-size: 0.9rem;
+}
+.card {
+border-radius: 12px;
+border: 1px solid #e5e7eb;
+padding: 12px;
+box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+background-color: #fff;
+}
+.cardTitle {
+font-size: 1.05rem;
+margin: 0 0 8px 0;
+}
+.form {
+display: flex;
+flex-direction: column;
+gap: 8px;
+}
+.label {
+font-size: 0.85rem;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.input,
+.textarea {
+border-radius: 8px;
+border: 1px solid #d1d5db;
+padding: 6px 8px;
+font-size: 0.9rem;
+}
+.textarea {
+min-height: 70px;
+resize: vertical;
+}

@@ -386,4 +386,24 @@ export default function ListingDetailsPage() {
                   <textarea
                     className={styles.textarea}
                     value={comment}
-    
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                </label>
+                {reviewError && (
+                  <div className={styles.errorBox}>{reviewError}</div>
+                )}
+                <button
+                  type="submit"
+                  className={styles.primaryButton}
+                  disabled={reviewSubmitting}
+                >
+                  {reviewSubmitting ? 'Submitting…' : 'Submit review'}
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
