@@ -52,11 +52,16 @@ export async function updateListing(token, id, payload) {
 
 // collect all of the data pertaining to a particular listing
 export async function fetchListingById(token, id) {
+  const headers = {
+    'Content-Type': 'application/json',
+  };
+  // change token request for users who do not log in
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${BASE_URL}/listings/${id}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
