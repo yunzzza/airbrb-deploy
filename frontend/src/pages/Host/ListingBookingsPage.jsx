@@ -195,4 +195,103 @@ export default function ListingBookingsPage() {
           type="button"
           className={styles.backButton}
           onClick={() => navigate('/host/listings')}
- 
+        >
+          ← Back to my listings
+        </button>
+      </header>
+
+      <section className={styles.summarySection}>
+        <h2 className={styles.sectionTitle}>This year overview</h2>
+        <div className={styles.summaryGrid}>
+          <div className={styles.summaryCard}>
+            <span className={styles.summaryLabel}>Days booked this year</span>
+            <span className={styles.summaryValue}>
+              {statsThisYear.daysBooked}
+            </span>
+          </div>
+          <div className={styles.summaryCard}>
+            <span className={styles.summaryLabel}>Profit this year (approx)</span>
+            <span className={styles.summaryValue}>
+              ${statsThisYear.profit}
+            </span>
+          </div>
+          <div className={styles.summaryCard}>
+            <span className={styles.summaryLabel}>Total requests</span>
+            <span className={styles.summaryValue}>{bookings.length}</span>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Pending booking requests</h2>
+        {pendingBookings.length === 0 && (
+          <p className={styles.textSmall}>No pending booking requests.</p>
+        )}
+        {pendingBookings.map((b) => (
+          <div key={b.id} className={styles.bookingCard}>
+            <div className={styles.bookingMain}>
+              <div className={styles.bookingDates}>
+                {b.dateRange?.start} → {b.dateRange?.end}
+              </div>
+              <div className={styles.bookingPrice}>
+                Total: ${b.totalPrice ?? 0}
+              </div>
+            </div>
+            <div className={styles.bookingMeta}>
+              <span>Status: {b.status}</span>
+              {b.guest && (
+                <span>Guest: {b.guest}</span>
+              )}
+            </div>
+            <div className={styles.bookingActions}>
+              <button
+                type="button"
+                className={styles.acceptButton}
+                onClick={() => handleDecision(b.id, 'accept')}
+              >
+                Accept
+              </button>
+              <button
+                type="button"
+                className={styles.declineButton}
+                onClick={() => handleDecision(b.id, 'decline')}
+              >
+                Decline
+              </button>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      <section className={styles.section}>
+        <h2 className={styles.sectionTitle}>Booking history</h2>
+        {historyBookings.length === 0 && (
+          <p className={styles.textSmall}>No booking history yet.</p>
+        )}
+        {historyBookings.map((b) => (
+          <div key={b.id} className={styles.bookingCard}>
+            <div className={styles.bookingMain}>
+              <div className={styles.bookingDates}>
+                {b.dateRange?.start} → {b.dateRange?.end}
+              </div>
+              <div className={styles.bookingPrice}>
+                Total: ${b.totalPrice ?? 0}
+              </div>
+            </div>
+            <div className={styles.bookingMeta}>
+              <span>
+                Status:{' '}
+                <strong className={styles[`status_${b.status?.toLowerCase()}`]}>
+                  {b.status}
+                </strong>
+              </span>
+              {b.guest && (
+                <span>Guest: {b.guest}</span>
+              )}
+            </div>
+          </div>
+        ))}
+      </section>
+    </div>
+  );
+}
