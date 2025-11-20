@@ -21,21 +21,23 @@ export async function fetchBookings(token) {
 
 
 // Create a new AirBrB booking for a particular listing
-export async function createBooking(token, listingId, dateRange) {
+export async function createBooking(token, listingId, dateRange, totalPrice) {
   const res = await fetch(`${BASE_URL}/bookings/new/${listingId}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ dateRange }),
+    body: JSON.stringify({ dateRange, totalPrice }),
   });
+
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     throw new Error(data.error || 'Failed to create booking');
   }
   return data;
 }
+
 
 
 // Post a new listing review
