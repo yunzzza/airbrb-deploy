@@ -110,30 +110,45 @@ export default function ListingDetailsPage() {
   }, [listing, searchRange]);
 
   // submit booking
-  const handleBookingSubmit = async (e) => {
+  // submit booking
+const handleBookingSubmit = async (e) => {
     e.preventDefault();
     setBookingMessage('');
     setBookingError('');
-
+  
     if (!isLoggedIn) {
       navigate('/login');
       return;
     }
-
+  
     if (!bookStart || !bookEnd) {
       setBookingError('Please choose both start and end dates.');
       return;
     }
-
+  
     if (bookStart > bookEnd) {
       setBookingError('Start date must not be after end date.');
       return;
     }
-
+  
     setBookingSubmitting(true);
     try {
       const payloadRange = { start: bookStart, end: bookEnd };
-      await createBooking(auth.token, listing.id || id, payloadRange);
+  
+      // calculate nights & price
+      const start = new Date(bookStart);
+      const end = new Date(bookEnd);
+      const msPerDay = 1000 * 60 * 60 * 24;
+      const nights = Math.max(1, Math.round((end - start) / msPerDay));
+      const totalPrice = nights * Number(listing.price);
+  
+      await createBooking(
+        auth.token,
+        listing.id || id,
+        payloadRange,
+        totalPrice
+      );
+  
       setBookingMessage('Booking request sent!');
       const data = await fetchBookings(auth.token);
       setMyBookings(data.bookings || []);
@@ -145,6 +160,7 @@ export default function ListingDetailsPage() {
       setBookingSubmitting(false);
     }
   };
+  
 
   // submit review
   const handleReviewSubmit = async (e) => {
