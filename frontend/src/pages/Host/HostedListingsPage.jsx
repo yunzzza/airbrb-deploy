@@ -158,6 +158,10 @@ export default function HostedListingsPage() {
     navigate(`/host/listings/${id}/edit`);
   };
 
+  const goToBookingsManage = (id) => {
+    navigate(`/host/listings/${id}/bookings`);
+  };
+
   if (loading) {
     return <div className={styles.container}>Loading...</div>;
   }
@@ -293,6 +297,12 @@ export default function HostedListingsPage() {
                   onClick={() => handleDelete(listing.id)}
                 >
                   Delete
+                </button>
+                <button
+                  className={styles.actionButton}
+                  onClick={() => goToBookingsManage(listing.id)}
+                >
+                  Manage bookings
                 </button>
                 <button
                   className={styles.actionButton}
