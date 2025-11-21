@@ -35,6 +35,10 @@ export default function ListingDetailsPage() {
 
   // load listings
   useEffect(() => {
+    if (!isLoggedIn) {
+        // clear bookings history for user not log in
+        setMyBookings([]);
+      }
     let ignore = false;
     const load = async () => {
       setLoadingListing(true);
@@ -83,12 +87,16 @@ export default function ListingDetailsPage() {
 
   // current listing
   const myBookingsForThisListing = useMemo(() => {
-    if (!listing) return [];
+    if (!listing || !auth?.email) return [];
     const listingId = listing.id || Number(id);
+  
     return myBookings.filter((b) => {
-      return String(b.listingId) === String(listingId);
+      const sameListing = String(b.listingId) === String(listingId);
+      const sameUser = b.owner === auth.email; 
+      return sameListing && sameUser;
     });
-  }, [myBookings, listing, id]);
+  }, [myBookings, listing, id, auth]);
+  
 
   // if booking is accepted, user can review for this listing
   const acceptedBookingForReview = useMemo(() => {

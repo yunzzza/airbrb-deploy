@@ -9,6 +9,59 @@ import {
   publishListing,
   unpublishListing,
 } from '../../api/listings';
+import { fetchBookings } from '../../api/bookings'; 
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+
+function computeProfitsForLast30Days(myListings, allBookings) {
+  if (!myListings || !myListings.length) {
+    return Array(31).fill(0);
+  }
+  const myIds = new Set(myListings.map((l) => String(l.id)));
+  const profits = Array(31).fill(0);
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  allBookings.forEach((b) => {
+    // only count my listings and accept bookings
+    if (!myIds.has(String(b.listingId))) return;
+    if ((b.status || '').toLowerCase() !== 'accepted') return;
+
+    const range = b.dateRange || {};
+    if (!range.start || !range.end) return;
+
+    const start = new Date(range.start);
+    const end = new Date(range.end);
+    // profit days
+    const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+
+    const nights = Math.max(
+      0,
+      Math.round((endDay - startDay) / MS_PER_DAY)
+    );
+    if (nights <= 0) return;
+
+    const totalPrice = Number(b.totalPrice ?? 0);
+    if (!Number.isFinite(totalPrice) || totalPrice <= 0) return;
+
+    const nightly = totalPrice / nights;
+    // count profits for different days
+    for (let i = 0; i < nights; i++) {
+      const day = new Date(startDay.getTime() + i * MS_PER_DAY);
+      const diffDays = Math.round((today - day) / MS_PER_DAY);
+      if (diffDays >= 0 && diffDays <= 30) {
+        profits[diffDays] += nightly;
+      }
+    }
+  });
+  return profits;
+}
+
+
+
+
 
 export default function HostedListingsPage() {
   const { auth, isLoggedIn } = useAuth();
@@ -17,6 +70,7 @@ export default function HostedListingsPage() {
   const [error, setError] = useState('');         
   const [availabilityDraft, setAvailabilityDraft] = useState({});
   const navigate = useNavigate();
+  const [profits, setProfits] = useState(Array(31).fill(0));
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -39,6 +93,16 @@ export default function HostedListingsPage() {
             return { ...listing, id: s.id };
           })
         );
+
+        try {
+          const bookingsData = await fetchBookings(auth.token);
+          const allBookings = bookingsData.bookings || bookingsData;
+          const profitsArr = computeProfitsForLast30Days(fullMine, allBookings);
+          setProfits(profitsArr);
+        } catch (err) {
+          console.error('Failed to load bookings for profit graph', err);
+          setProfits(Array(31).fill(0));
+        }
 
         setListings(fullMine);
       } catch (err) {
@@ -189,6 +253,23 @@ export default function HostedListingsPage() {
         </button>
       </div>
 
+      <div className={styles.profitSection}>
+      <div className={styles.profitHeader}>
+        <h2 className={styles.profitTitle}>Profit in last 30 days</h2>
+        <span className={styles.profitSubtitle}>
+          X: days ago (0 = today), Y: $ earned that day
+        </span>
+      </div>
+
+      <ProfitGraph profits={profits} />
+
+      {profits.every((v) => v === 0) && (
+        <p className={styles.profitEmpty}>
+          No accepted bookings in the last 30 days yet.
+        </p>
+      )}
+    </div>
+
       <div className={styles.list}>
         {listings.map((listing) => {
           const meta = listing.metadata;
@@ -322,3 +403,4 @@ export default function HostedListingsPage() {
     </div>
   );
 }
+
