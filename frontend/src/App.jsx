@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import Navbar from './components/layout/Navbar';
@@ -11,7 +10,6 @@ import ListingDetailsPage from './pages/Listing/ListingDetailsPage';
 import ListingBookingsPage from './pages/Host/ListingBookingsPage';
 
 function App() {
-  const [count, setCount] = useState(0);
   
   return (
     <BrowserRouter>

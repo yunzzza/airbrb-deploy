@@ -1,19 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 
 export default function Navbar() {
-    const { auth, isLoggedIn, logout } = useAuth();
-    const navigate = useNavigate();
-    // logout
-    const handleLogout = () => {
-        logout();
-        navigate('/');   
-      };
+  const { auth, isLoggedIn, logout } = useAuth();
+  const navigate = useNavigate();
+  // logout
+  const handleLogout = () => {
+    logout();
+    navigate('/');   
+  };
     
-    return (
+  return (
     <nav className={styles.navbar}>
-        <div className={styles.navContent}>
+      <div className={styles.navContent}>
 
         {/* logo, redirect to main page */}
         <Link to="/" className={styles.logo}>
@@ -22,44 +22,44 @@ export default function Navbar() {
 
         {/* buttons and user info */}
         <div className={styles.buttonGroup}>
-            {isLoggedIn ? (
+          {isLoggedIn ? (
             <>
-                {/* user email */}
-                {auth.email && (
+              {/* user email */}
+              {auth.email && (
                 <span className={styles.userEmail}>{auth.email}</span>
-                )}
+              )}
 
-                {/* view all listings） */}
-                <Link to="/" className={styles.navButton}>
+              {/* view all listings） */}
+              <Link to="/" className={styles.navButton}>
                 All listings
-                </Link>
+              </Link>
 
-                {/* view hosted listings */}
-                <Link to="/host/listings" className={styles.navButton}>
+              {/* view hosted listings */}
+              <Link to="/host/listings" className={styles.navButton}>
                 My listings
-                </Link>
+              </Link>
 
-                {/* Logout button */}
-                <button
+              {/* Logout button */}
+              <button
                 type="button"
                 className={styles.navButton}
                 onClick={handleLogout}
-                >
+              >
                 Logout
-                </button>
+              </button>
             </>
-            ) : (
+          ) : (
             <>
-                <Link to="/login" className={styles.navButton}>
+              <Link to="/login" className={styles.navButton}>
                 Login
-                </Link>
-                <Link to="/register" className={styles.navButton}>
+              </Link>
+              <Link to="/register" className={styles.navButton}>
                 Sign up
-                </Link>
+              </Link>
             </>
-            )}
+          )}
         </div>
-        </div>
+      </div>
     </nav>
-    );
+  );
 }

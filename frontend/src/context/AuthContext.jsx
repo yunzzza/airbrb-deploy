@@ -1,13 +1,8 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import { loginRequest } from '../api/auth';
 
 // create context
-const AuthContext = createContext(null);
-
-// for others
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export const AuthContext = createContext(null);
 
 // Provider component
 export function AuthProvider({ children }) {

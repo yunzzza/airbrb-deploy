@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HostedListingsPage.module.css';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import {
   fetchAllListings,
   fetchListingById,
@@ -369,21 +369,21 @@ export default function HostedListingsPage() {
       </div>
 
       <div className={styles.profitSection}>
-      <div className={styles.profitHeader}>
-        <h2 className={styles.profitTitle}>Profit in last 30 days</h2>
-        <span className={styles.profitSubtitle}>
-          X: days ago (0 = today), Y: $ earned that day
-        </span>
+        <div className={styles.profitHeader}>
+          <h2 className={styles.profitTitle}>Profit in last 30 days</h2>
+          <span className={styles.profitSubtitle}>
+            X: days ago (0 = today), Y: $ earned that day
+          </span>
+        </div>
+
+        <ProfitGraph profits={profits} />
+
+        {profits.every((v) => v === 0) && (
+          <p className={styles.profitEmpty}>
+            No accepted bookings in the last 30 days yet.
+          </p>
+        )}
       </div>
-
-      <ProfitGraph profits={profits} />
-
-      {profits.every((v) => v === 0) && (
-        <p className={styles.profitEmpty}>
-          No accepted bookings in the last 30 days yet.
-        </p>
-      )}
-    </div>
 
       <div className={styles.list}>
         {listings.map((listing) => {

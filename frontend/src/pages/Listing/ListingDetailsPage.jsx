@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import styles from './ListingDetailsPage.module.css';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { fetchListingById } from '../../api/listings';
 import { fetchBookings, createBooking, createReview } from '../../api/bookings';
 
@@ -36,9 +36,9 @@ export default function ListingDetailsPage() {
   // load listings
   useEffect(() => {
     if (!isLoggedIn) {
-        // clear bookings history for user not log in
-        setMyBookings([]);
-      }
+      // clear bookings history for user not log in
+      setMyBookings([]);
+    }
     let ignore = false;
     const load = async () => {
       setLoadingListing(true);
@@ -119,7 +119,7 @@ export default function ListingDetailsPage() {
 
   // submit booking
   // submit booking
-const handleBookingSubmit = async (e) => {
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
     setBookingMessage('');
     setBookingError('');

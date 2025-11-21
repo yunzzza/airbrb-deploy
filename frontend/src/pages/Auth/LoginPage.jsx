@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './LoginPage.module.css';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -24,14 +24,14 @@ export default function LoginPage() {
     setSubmitting(true);
 
     try {
-        await login(email, password);   //use login in authcontext, set token
-        // login successfully, redirect to main page
-        navigate('/');
-      } catch (err) {
-        setError(err.message || 'Login failed');
-      } finally {
-        setSubmitting(false);
-      }
+      await login(email, password);   //use login in authcontext, set token
+      // login successfully, redirect to main page
+      navigate('/');
+    } catch (err) {
+      setError(err.message || 'Login failed');
+    } finally {
+      setSubmitting(false);
+    }
 
   };
 

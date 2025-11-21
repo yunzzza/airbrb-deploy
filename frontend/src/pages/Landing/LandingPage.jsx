@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './LandingPage.module.css';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/useAuth';
 import { fetchAllListings, fetchListingById } from '../../api/listings';
 import { fetchBookings } from '../../api/bookings';
 
@@ -76,11 +76,11 @@ export default function LandingPage() {
 
         // details for published variable
         const fullList = await Promise.all(
-            list.map(async (s) => {
+          list.map(async (s) => {
             const detail = await fetchListingById(auth.token, s.id);
             const listing = detail.listing;
             return { ...listing, id: s.id };
-            })
+          })
         );
   
         // only remain published listings
