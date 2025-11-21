@@ -60,6 +60,121 @@ function computeProfitsForLast30Days(myListings, allBookings) {
 }
 
 
+function ProfitGraph({ profits }) {
+  const max = Math.max(...profits);
+  const height = 160;
+  const width = 380;
+  const padding = { top: 10, right: 10, bottom: 28, left: 50 };
+  const innerHeight = height - padding.top - padding.bottom;
+  const innerWidth = width - padding.left - padding.right;
+  const barCount = profits.length; 
+  const barWidth = innerWidth / barCount || 1;
+
+  // y ticks
+  const yTicks = max > 0 ? [0, max / 2, max] : [0];
+
+  return (
+    <svg
+      className={styles.profitSvg}
+      viewBox={`0 0 ${width} ${height}`}
+      role="img"
+      aria-label="Profit over the last 30 days"
+    >
+      {/* Y label */}
+      <line
+        x1={padding.left}
+        y1={padding.top}
+        x2={padding.left}
+        y2={height - padding.bottom}
+        className={styles.axisLine}
+      />
+
+      {/* X label */}
+      <line
+        x1={padding.left}
+        y1={height - padding.bottom}
+        x2={width - padding.right}
+        y2={height - padding.bottom}
+        className={styles.axisLine}
+      />
+
+      {/* Y values */}
+      {profits.map((val, dayAgo) => {
+        const barHeight = max > 0 ? (val / max) * innerHeight : 0;
+        const x = padding.left + dayAgo * barWidth;
+        const y = height - padding.bottom - barHeight;
+        return (
+          <rect
+            key={dayAgo}
+            x={x}
+            y={y}
+            width={Math.max(barWidth - 1, 1)}
+            height={barHeight}
+            className={styles.profitBar}
+          />
+        );
+      })}
+
+      {/* Y label details */}
+      {yTicks.map((v) => {
+        const ratio = max > 0 ? v / max : 0;
+        const y = height - padding.bottom - ratio * innerHeight;
+        return (
+          <g key={v}>
+            {/* Y values detail */}
+            <text
+              x={padding.left - 12}
+              y={y + 4}
+              textAnchor="end"
+              className={styles.axisLabel}
+            >
+              ${v.toFixed(0)}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* X label */}
+      {[0, 10, 20, 30].map((d) => {
+        const x = padding.left + d * barWidth;
+        const y = height - padding.bottom + 14;
+        return (
+          <text
+            key={d}
+            x={x}
+            y={y}
+            textAnchor="middle"
+            className={styles.axisLabel}
+          >
+            {d}
+          </text>
+        );
+      })}
+
+      {/* X title: Days ago */}
+      <text
+        x={(padding.left + (width - padding.right)) / 2}
+        y={height - 4}
+        textAnchor="middle"
+        className={styles.axisLabel}
+      >
+        Days ago
+      </text>
+
+      {/* Y title: profit($)*/}
+      <text
+        x={12}
+        y={height / 2}
+        textAnchor="middle"
+        transform={`rotate(-90 12 ${height / 2})`}
+        className={styles.axisLabel}
+      >
+        Profit ($)
+      </text>
+    </svg>
+  );
+}
+
 
 
 
