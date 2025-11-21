@@ -1,0 +1,135 @@
+.container {
+max-width: 960px;
+margin: 0 auto;
+padding: 24px 16px 40px;
+}
+.header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+gap: 16px;
+margin-bottom: 24px;
+}
+.title {
+font-size: 24px;
+font-weight: 600;
+}
+.subtitle {
+font-size: 14px;
+color: #555;
+}
+.backButton {
+border: 1px solid #ddd;
+background: #fff;
+padding: 6px 12px;
+border-radius: 999px;
+cursor: pointer;
+font-size: 14px;
+}
+.backButton:hover {
+background: #f5f5f5;
+}
+.errorBox {
+padding: 12px;
+border-radius: 8px;
+background: #ffe0e0;
+color: #900;
+font-size: 14px;
+}
+.section {
+margin-top: 24px;
+}
+.sectionTitle {
+font-size: 18px;
+font-weight: 600;
+margin-bottom: 12px;
+}
+.summarySection {
+margin-bottom: 24px;
+}
+.summaryGrid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+gap: 12px;
+}
+.summaryCard {
+padding: 12px 16px;
+border-radius: 10px;
+border: 1px solid #eee;
+background: #fafafa;
+}
+.summaryLabel {
+font-size: 12px;
+color: #666;
+}
+.summaryValue {
+font-size: 18px;
+font-weight: 600;
+}
+.textSmall {
+font-size: 13px;
+color: #666;
+}
+.bookingCard {
+border-radius: 12px;
+border: 1px solid #eee;
+padding: 12px 14px;
+margin-bottom: 10px;
+background: #fff;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.bookingMain {
+display: flex;
+justify-content: space-between;
+font-size: 14px;
+}
+.bookingDates {
+font-weight: 500;
+}
+.bookingPrice {
+font-weight: 500;
+}
+.bookingMeta {
+display: flex;
+gap: 16px;
+font-size: 13px;
+color: #555;
+}
+.bookingActions {
+margin-top: 6px;
+display: flex;
+gap: 8px;
+}
+.acceptButton,
+.declineButton {
+padding: 6px 10px;
+border-radius: 999px;
+border: none;
+font-size: 13px;
+cursor: pointer;
+}
+.acceptButton {
+background: #16a34a;
+color: #fff;
+}
+.acceptButton:hover {
+opacity: 0.9;
+}
+.declineButton {
+background: #ef4444;
+color: #fff;
+}
+.declineButton:hover {
+opacity: 0.9;
+}
+.status_accepted {
+color: #16a34a;
+}
+.status_declined {
+color: #ef4444;
+}
+.status_pending {
+color: #f97316;
+}
