@@ -51,12 +51,12 @@ export async function createReview(
   const res = await fetch(
     `${BASE_URL}/listings/${listingId}/review/${bookingId}`,
     {
-      method: 'POST',
+      method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ rating, comment }),
+      body: JSON.stringify( {review:{ rating, comment }}),
     }
   );
   const data = await res.json().catch(() => ({}));
